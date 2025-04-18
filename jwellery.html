@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Necklace Customizer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fffaf0;
+      color: #333;
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .customizer {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+    }
+
+    .pendants, .colors {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .preview {
+      text-align: center;
+    }
+
+    .preview img {
+      width: 250px;
+      height: 250px;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .pendant-img {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 10px;
+    }
+
+    .pendant-img.selected {
+      border-color: #26a69a;
+    }
+
+    .color-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid #aaa;
+      cursor: pointer;
+    }
+
+    .color-circle.selected {
+      border-color: #26a69a;
+    }
+
+    .actions {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .quantity {
+      width: 60px;
+      padding: 5px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #26a69a;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    .btn:hover {
+      background: #00796b;
+    }
+
+    .summary {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Customize Your Necklace</h1>
+
+  <div class="customizer">
+    <div class="pendants">
+      <h3>Select Pendant</h3>
+      <img src="pendant.jpeg" class="pendant-img selected" onclick="selectPendant('pendant', this)" id="pendant1">
+      <img src="pendan1.jpeg" class="pendant-img" onclick="selectPendant('pendan1', this)" id="pendant2">
+      <img src="pendant2.jpeg" class="pendant-img" onclick="selectPendant('pendant2', this)" id="pendant3">
+    </div>
+
+    <div class="preview">
+      <!-- Static Necklace Image that will remain constant for all colors -->
+      <img src="necklace.jpeg" id="necklaceImage" alt="Necklace Preview">
+      <div class="colors">
+        <h3>Select Color</h3>
+        <div class="color-circle selected" style="background-color: gold;" onclick="selectColor('gold', this)"></div>
+        <div class="color-circle" style="background-color: silver;" onclick="selectColor('silver', this)"></div>
+        <div class="color-circle" style="background-color: #b76e79;" onclick="selectColor('rose', this)"></div>
+      </div>
+      <div class="actions">
+        <input type="number" id="quantity" class="quantity" min="1" value="1">
+        <button class="btn" onclick="placeOrder()">Order</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary" id="orderSummary"></div>
+
+  <script>
+    const basePrice = 1500;
+    let selectedPendant = 'pendant';
+    let selectedColor = 'gold';
+
+    function updateImage() {
+      // Set the image of the necklace based on the selected color
+      const necklaceImage = document.getElementById('necklaceImage');
+      necklaceImage.src = `necklace-${selectedColor}.jpeg`;  // Different color versions of the same necklace
+    }
+
+    function selectPendant(pendantId, element) {
+      selectedPendant = pendantId;
+      document.querySelectorAll('.pendant-img').forEach(img => img.classList.remove('selected'));
+      element.classList.add('selected');
+     
+    }
+
+    function selectColor(color, element) {
+      selectedColor = color;
+      document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+      element.classList.add('selected');
+     
+    }
+
+    function placeOrder() {
+      const qty = parseInt(document.getElementById('quantity').value) || 0;
+      if (qty < 1) {
+        alert("Please enter a valid quantity.");
+        return;
+      }
+
+      const total = qty * basePrice;
+      document.getElementById('orderSummary').innerHTML = `
+        <strong>Order Summary:</strong><br>
+        Pendant: ${selectedPendant}<br>
+        Color: ${selectedColor}<br>
+        Quantity: ${qty}<br>
+        Total Price: ₹${total.toLocaleString()}
+      `;
+    }
+  </script>
+
+</body>
+</html>
